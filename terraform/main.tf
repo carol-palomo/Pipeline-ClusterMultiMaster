@@ -19,7 +19,7 @@ data "aws_ami" "k8s_jenkins" {
 
 resource "aws_instance" "k8s_proxy" {
   ami           = "ami-09e67e426f25ce0d7"
-  subnet_id     = "subnet-0ab487dbac2dcfa24"
+  subnet_id     = "subnet-043dd0bcbe32d666f"
   instance_type = "t2.micro"
   key_name      = "id_rsa_jenkins"
   associate_public_ip_address = true
@@ -33,7 +33,7 @@ resource "aws_instance" "k8s_proxy" {
   }
   
   tags = {
-    Name = "k8s-haproxy"
+    Name = "k8s-haproxy-GamaOne"
   }
   vpc_security_group_ids  = ["${aws_security_group.kubernetes_workers_jks.id}", "${aws_security_group.kubernetes_geral_jks.id}"]
 }
@@ -55,7 +55,7 @@ resource "aws_instance" "k8s_masters" {
   }
   
   tags = {
-    Name = "k8s-master-${count.index}"
+    Name = "k8s-master-${count.index}-GamaOne"
   }
   vpc_security_group_ids  = ["${aws_security_group.kubernetes_master_jks.id}", "${aws_security_group.kubernetes_geral_jks.id}"]
   depends_on = [
@@ -80,7 +80,7 @@ resource "aws_instance" "k8s_workers" {
   }  
   
   tags = {
-    Name = "k8s_workers-${count.index}"
+    Name = "k8s-workers-${count.index}-GamaOne"
   }
   vpc_security_group_ids  = ["${aws_security_group.kubernetes_workers_jks.id}", "${aws_security_group.kubernetes_geral_jks.id}"]
 }
