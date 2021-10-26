@@ -44,7 +44,7 @@ resource "aws_instance" "k8s_proxy" {
   tags = {
     Name = "k8s-haproxy"
   }
-  vpc_security_group_ids  = ["${aws_security_group.kubernetes_workers.id}", "${aws_security_group.kubernetes_geral.id}"]
+  vpc_security_group_ids  = ["${aws_security_group.kubernetes_workers_jks.id}", "${aws_security_group.kubernetes_geral_jks.id}"]
 }
 
 resource "aws_instance" "k8s_masters" {
@@ -66,7 +66,7 @@ resource "aws_instance" "k8s_masters" {
   tags = {
     Name = "k8s-master-${count.index}"
   }
-  vpc_security_group_ids  = ["${aws_security_group.kubernetes_master.id}", "${aws_security_group.kubernetes_geral.id}"]
+  vpc_security_group_ids  = ["${aws_security_group.kubernetes_master_jks.id}", "${aws_security_group.kubernetes_geral_jks.id}"]
   depends_on = [
     aws_instance.k8s_workers,
   ]
@@ -91,12 +91,12 @@ resource "aws_instance" "k8s_workers" {
   tags = {
     Name = "k8s_workers-${count.index}"
   }
-  vpc_security_group_ids  = ["${aws_security_group.kubernetes_workers.id}", "${aws_security_group.kubernetes_geral.id}"]
+  vpc_security_group_ids  = ["${aws_security_group.kubernetes_workers_jks.id}", "${aws_security_group.kubernetes_geral_jks.id}"]
 }
 
 ############################################# BLOCO SECURITY GROUP
 
-resource "aws_security_group" "kubernetes_master" {
+resource "aws_security_group" "kubernetes_master_jks" {
   name        = "kubernetes_master"
   description = "Allow SSH inbound traffic criado pelo terraform VPC"
   vpc_id = "vpc-0304dcb48c5e67fa0"
@@ -145,7 +145,7 @@ resource "aws_security_group" "kubernetes_master" {
   }
 }
 
-resource "aws_security_group" "kubernetes_workers" {
+resource "aws_security_group" "kubernetes_workers_jks" {
   name        = "kubernetes_workers"
   description = "acessos_workers inbound traffic"
   vpc_id = "vpc-0304dcb48c5e67fa0"
@@ -183,7 +183,7 @@ resource "aws_security_group" "kubernetes_workers" {
   }
 }
 
-resource "aws_security_group" "kubernetes_geral" {
+resource "aws_security_group" "kubernetes_geral_jks" {
   name        = "kubernetes_geral"
   description = "all tcp entre master e nodes do kubernetes"
   vpc_id = "vpc-0304dcb48c5e67fa0"
@@ -197,7 +197,7 @@ resource "aws_security_group" "kubernetes_geral" {
       cidr_blocks      = null
       ipv6_cidr_blocks = null,
       prefix_list_ids = null,
-      security_groups: ["${aws_security_group.kubernetes_master.id}", "${aws_security_group.kubernetes_workers.id}"]
+      security_groups: ["${aws_security_group.kubernetes_master_jks.id}", "${aws_security_group.kubernetes_workers_jks.id}"]
       self: null
     },
   ]
